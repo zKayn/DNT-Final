@@ -33,82 +33,121 @@ class _OrderState extends State<Order> {
     getontheload();
     super.initState();
   }
+
   // Hàm định dạng giá tiền
   String formatPrice(int price) {
     final formatter = NumberFormat('#,###', 'vi_VN');
     return formatter.format(price);
   }
 
+  // Hàm để lấy màu sắc của trạng thái
+  Color getStatusColor(String status) {
+    switch (status) {
+      case "Chờ Lấy Hàng":
+        return Colors.amber;  // Màu vàng cho "Chờ Lấy Hàng"
+      case "Chờ Giao Hàng":
+        return Colors.blue;  // Màu xanh dương cho "Chờ Giao Hàng"
+      case "Đã Giao Hàng":
+        return Colors.green; // Màu xanh lá cho "Đã Giao Hàng"
+      default:
+        return Colors.grey;  // Màu xám cho các trạng thái khác
+    }
+  }
+
+  // Widget hiển thị tất cả đơn hàng
   Widget allOrders() {
     return StreamBuilder(
-        stream: orderStream,
-        builder: (context, AsyncSnapshot snapshot) {
-          return snapshot.hasData
-              ? ListView.builder(
-              padding: EdgeInsets.zero,
-              itemCount: snapshot.data.docs.length,
-              itemBuilder: (context, index) {
-                DocumentSnapshot ds = snapshot.data.docs[index];
+      stream: orderStream,
+      builder: (context, AsyncSnapshot snapshot) {
+        return snapshot.hasData
+            ? ListView.builder(
+                padding: EdgeInsets.zero,
+                itemCount: snapshot.data.docs.length,
+                itemBuilder: (context, index) {
+                  DocumentSnapshot ds = snapshot.data.docs[index];
 
-                return Container(
-                  margin: EdgeInsets.only(bottom: 20.0),
-                  child: Material(
-                    elevation: 3.0,
-                    borderRadius: BorderRadius.circular(10),
-                    child: Container(
-                      padding: EdgeInsets.only(
-                          left: 20.0, top: 10.0, bottom: 10.0),
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        children: [
-                          Image.network(
-                            ds["ProductImage"],
-                            height: 120,
-                            width: 120,
-                            fit: BoxFit.cover,
-                          ),
-                          SizedBox(width: 10), // Thêm khoảng cách
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  ds["Product"],
-                                  style: AppWidget.semiboldTextFeildStyle(),
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                ),
-                                Text(
-                                  "₫" + formatPrice(int.parse(ds["Price"])),
-                                  style: TextStyle(
-                                      color: Color(0xff070000),
-                                      fontSize: 22.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  "Trạng thái: " + ds["Status"],
-                                  style: TextStyle(
-                                      color: Color(0xffd60f46),
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.bold),
-                                  overflow: TextOverflow.clip,
-                                  maxLines: 2,
-                                ),
-                              ],
+                  // Kiểm tra kiểu dữ liệu của Price
+                  var price = ds["Price"];
+                  double priceValue = 0.0;
+
+                  // Kiểm tra kiểu dữ liệu của price (có thể là double hoặc String)
+                  if (price is double) {
+                    priceValue = price; // Nếu Price là double, gán trực tiếp
+                  } else if (price is String) {
+                    // Nếu Price là String, cố gắng chuyển đổi
+                    priceValue = double.tryParse(price) ?? 0.0; // Dùng tryParse để tránh lỗi
+                  }
+
+                  return Container(
+                    margin: EdgeInsets.only(bottom: 20.0),
+                    child: Material(
+                      elevation: 3.0,
+                      borderRadius: BorderRadius.circular(10),
+                      child: Container(
+                        padding: EdgeInsets.only(
+                            left: 20.0, top: 10.0, bottom: 10.0),
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Row(
+                          children: [
+                            Image.network(
+                              ds["ProductImage"],
+                              height: 120,
+                              width: 120,
+                              fit: BoxFit.cover,
                             ),
-                          ),
-                        ],
+                            SizedBox(width: 10), 
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    ds["Product"],
+                                    style: AppWidget.semiboldTextFeildStyle(),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                  ),
+                                  Text(
+                                    "₫" +
+                                        formatPrice(priceValue
+                                            .toInt()), // Giá trị Price được định dạng và chuyển thành String
+                                    style: TextStyle(
+                                        color: Color(0xff070000),
+                                        fontSize: 22.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  // Hiển thị trạng thái với màu sắc
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 5.0, horizontal: 12.0),
+                                    decoration: BoxDecoration(
+                                      color: getStatusColor(ds["Status"]),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Text(
+                                      ds["Status"], // Trạng thái đơn hàng
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                );
-              })
-              : Container();
-        });
+                  );
+                })
+            : Container();
+      },
+    );
   }
 
   @override

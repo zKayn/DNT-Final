@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shoppingapp/Admin/home_admin.dart';
+import 'package:shoppingapp/pages/login.dart';
+import 'package:shoppingapp/pages/signup.dart';
 import 'package:shoppingapp/widget/support_widget.dart';
 
 class AdminLogin extends StatefulWidget {
@@ -17,6 +19,14 @@ class _AdminLoginState extends State<AdminLogin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: GestureDetector(
+            onTap: () {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => Login()));
+            },
+            child: Icon(Icons.arrow_back_ios_new_outlined)),
+      ),
       body: SingleChildScrollView(
         child: Container(
           margin: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 40.0),

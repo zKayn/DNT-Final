@@ -25,6 +25,9 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="shoppingapp">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
@@ -36,3 +39,21 @@
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>
+
+<script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"></script>
+<script src="https://js.stripe.com/v3/"></script>
+<script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDjKSxPfciCymlqhEu8fBdpiRDLZDgC208",
+    authDomain: "final-dnt.firebaseapp.com",
+    databaseURL: "https://final-dnt-default-rtdb.firebaseio.com",
+    projectId: "final-dnt",
+    storageBucket: "final-dnt.firebasestorage.app",
+    messagingSenderId: "758909414405",
+    appId: "1:758909414405:web:51ab19f95676b70f5ac06c",
+    measurementId: "G-2RYG8K93RG",
+  };
+  firebase.initializeApp(firebaseConfig);
+</script>

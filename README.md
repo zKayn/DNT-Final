@@ -77,6 +77,7 @@ b. **Cấu hình Backend**
 c. **Kiểm tra ứng dụng**
 - Mở ứng dụng trên thiết bị hoặc giả lập.
 - Đảm bảo các chức năng chính hoạt động:
+
    - Tìm kiếm sản phẩm.
    - Duyệt danh mục sản phẩm.
    - Xem chi tiết sản phẩm.
